@@ -1,0 +1,33 @@
+{%- extends 'base.html' %}
+{%- block head %}
+	<link href="/static/rome.css" rel="stylesheet" type="text/css" />
+	<script src="/static/rome.js"></script>
+	<script src="/static/code.js"></script>
+	<script>
+	const dates = {{ free_slots|tojson }}
+	</script>
+{% endblock %}
+{%- block body %}
+<body onload="init()">
+	<h3>{{ cfg['schedule_name'] }} - appointment scheduler</h3>
+	{%- if not free_slots %}
+	Sorry, no slots are available for booking at this time! Try again later!
+	{%- else %}
+	<b><i>Notes:<br />
+	- Full service (removal + manicure + design) may take up to 3 hours. Please plan accordingly!<br />
+	</b></i><br />
+	<div id="calendar"></div><br />
+	<div id="message">Please pick from available dates above ^^</div><br />
+	<form id="slots" method="post" style="margin: 0px">
+		<br />
+		<label for="name">Name: </label><input type="text" placeholder="Alex Doe" name="name" required/><br />
+		<label for="phone">Phone: </label><input type="text" placeholder="+14081234567" name="phone" required/><br />
+		<label for="email">Email: </label><input type="email" placeholder="abc@gmail.com" name="email"/><br /><br />
+		<input type="submit" value="Schedule!" />
+		<br />
+		<br />
+	</form>
+	<div><i>Problems with this website? Need to cancel or reschedule? Drop an email with details to <b>lena.su.nails@gmail.com</b></i></div>
+	{%- endif %}
+</body>
+{% endblock %}

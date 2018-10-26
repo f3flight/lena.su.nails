@@ -1,0 +1,59 @@
+
+dateDict = {}
+
+function build_date_str(d) {
+	dateStr = d.getFullYear() +
+		'-' + ('0' + (d.getMonth() + 1)).slice(-2) +
+		'-' + ('0' + d.getDate()).slice(-2);
+	return dateStr;
+};
+
+function init() {
+
+	for (datetime in dates) {
+		dateStr = datetime.substr(0,10);
+		timeStr = datetime.substr(11,5);
+		if (!(dateStr in dateDict)) {
+			dateDict[dateStr] = {}
+		}
+		dateDict[dateStr][timeStr] = dates[datetime]
+	}
+
+
+	const opts = {
+		'dateValidator': function(d) {
+			dateStr = build_date_str(d);
+			if (dateStr in dateDict) {
+				return true;
+			} else {
+				return false;
+			}
+		},
+		'time': false
+	};
+	cal = document.getElementById('calendar');
+	slots = document.getElementById('slots');
+	form_template_html = slots.innerHTML;
+	slots.innerHTML = "";
+	message = document.getElementById('message');
+	rome(cal, opts).on('data', function(v) {
+		slots.innerHTML = "";
+		if (v in dateDict) {
+			message.innerText = 'Please select an available slot on ' +
+				v + ':'
+		};
+		var checked = false;
+		for (x in dateDict[v]) {
+			var hours = parseInt(x.substr(0,2));
+			var suffix = hours >= 12 ? " pm" : " am";
+			hours = ((hours + 11) % 12 + 1);
+			var time_txt = hours + x.substr(2,3) + suffix;
+			slots.innerHTML += '<input type="radio" name="slot" value="' +
+				dateDict[v][x]['id'] + '"' + (checked ? '' : ' checked="checked"') + ' />' + time_txt + '<br />';
+			checked = true;
+		};
+		if (v in dateDict) {
+			slots.innerHTML += form_template_html; 
+		};
+	});
+};

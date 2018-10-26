@@ -1,0 +1,7 @@
+{%- extends 'base.html' %}
+{%- block body %}
+<body>
+	Appointment booked! Thank you!<br />
+	<a href="{{ request.headers['X-Client-Root'] }}">Book some more...</a>
+</body>
+{%- endblock %}

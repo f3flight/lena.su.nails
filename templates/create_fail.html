@@ -1,0 +1,8 @@
+{%- extends 'base.html' %}
+{%- block body %}
+<body>
+	Something went wrong!<br />
+	{{ session['fail_msg'] }}<br />
+	<a href="{{ request.headers['X-Client-Root'] }}">Try again...</a>
+</body>
+{%- endblock %}
