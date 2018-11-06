@@ -36,11 +36,10 @@ function init() {
 	form_template_html = slots.innerHTML;
 	slots.innerHTML = "";
 	message = document.getElementById('message');
-	rome(cal, opts).on('data', function(v) {
+	romeObj = rome(cal, opts).on('data', function(v) {
 		slots.innerHTML = "";
 		if (v in dateDict) {
-			message.innerText = 'Please select an available slot on ' +
-				v + ':'
+			message.innerHTML = '<b>' + romeObj.getMoment().format('dddd, MMM Do') + '</b>:';
 		};
 		var checked = false;
 		for (x in dateDict[v]) {
