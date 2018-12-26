@@ -34,8 +34,6 @@ def main():
 
 @app.route('/free')
 def free_json():
-    if 'cal' not in g:
-        g.cal = gcal.AppointmentManager('credentials.json', cfg)
     return json.dumps(free_slots_stripped())
 
 
@@ -65,6 +63,8 @@ def post(request):
     else:
         return fail_with_msg('Looks like you forgot to select a time slot?')
     if ok:
+        start = gcal.key_to_time(ok, 'start')
+        session['booked_time'] = start.strftime('%A, %b %-d at %-I:%M %p')
         return redirect(request.headers['X-Client-Root'] + 'success', code=302)
     else:
         return fail_with_msg('Sorry, this slot is already booked!'
@@ -74,7 +74,11 @@ def post(request):
 @app.route('/success')
 def success():
     session['fail_msg'] = None
-    return render_template('create_success.html')
+    if 'cal' not in g:
+        g.cal = gcal.AppointmentManager('credentials.json', cfg)
+    if 'booked_time' not in session:
+        session['booked_time'] = None
+    return render_template('create_success.html', slot=session['booked_time'])
 
 
 @app.route('/fail')
@@ -84,6 +88,8 @@ def fail():
 
 def free_slots_stripped():
     result = {}
+    if 'cal' not in g:
+        g.cal = gcal.AppointmentManager('credentials.json', cfg)
     if g.cal.free_slots:
         for slot in g.cal.free_slots:
             key = slot['start']['dateTime']

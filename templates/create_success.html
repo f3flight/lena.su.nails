@@ -1,7 +1,10 @@
 {%- extends 'base.html' %}
 {%- block body %}
 <body>
-	Appointment booked! Thank you!<br />
+	Appointment booked on: <b>{{slot}}</b><br />
+	Thank you!<br />
+	You will later get an SMS asking to confirm appointment.<br />
+	You should also get a confirmation to your email if you entered it. <i>(timezone might be incorrect as UTC, this is a known issue)</i><br />
 	<a href="{{ request.headers['X-Client-Root'] }}">Book some more...</a>
 </body>
 {%- endblock %}
